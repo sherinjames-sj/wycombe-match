@@ -9,188 +9,260 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a data match record. Label-style header with a small bar chart, then requirement-to-evidence rows like a goods-receipt check. */
+/* Layout: a BI report about the candidate. Report header, KPI tiles, coverage strip, systems flow, requirement table, career gantt. */
 :root {
-  --paper: #eef1f4;
+  --paper: #edf1f1;
   --sheet: #ffffff;
-  --ink: #16212c;
-  --muted: #56636f;
-  --rule: #d3d9df;
-  --label: #8fd6c4;
-  --label-ink: #06231d;
+  --ink: #12222a;
+  --muted: #55666e;
+  --rule: #d2dbdc;
+  --accent: #0f8b7c;
+  --accent-soft: #d6efea;
+  --accent-ink: #06231d;
+  --hero: #12222a;
+  --hero-ink: #eaf3f2;
   --ok: #1f7a4d;
   --ok-bg: #e2f2e9;
   --part: #8a5a00;
   --part-bg: #fbefd2;
+  --new: #55666e;
+  --new-bg: #e6ebec;
   --display: "Archivo", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
   --body: "IBM Plex Sans", "Segoe UI", Roboto, Arial, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0e151c; --sheet: #151f29; --ink: #e5eaef; --muted: #9aa7b3; --rule: #2a3744;
-    --label: #6fc9b4; --label-ink: #06231d; --ok: #6fd3a0; --ok-bg: #173327; --part: #f2c46a; --part-bg: #3a2c10;
+    --paper: #0c1418; --sheet: #142027; --ink: #e6eef0; --muted: #98a9b0; --rule: #27363d;
+    --accent: #5fd0bd; --accent-soft: #143a35; --accent-ink: #06231d; --hero: #1b2c34; --hero-ink: #eaf3f2;
+    --ok: #6fd3a0; --ok-bg: #173327; --part: #f2c46a; --part-bg: #3a2c10; --new: #98a9b0; --new-bg: #22313a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0e151c; --sheet: #151f29; --ink: #e5eaef; --muted: #9aa7b3; --rule: #2a3744;
-  --label: #6fc9b4; --label-ink: #06231d; --ok: #6fd3a0; --ok-bg: #173327; --part: #f2c46a; --part-bg: #3a2c10;
+  --paper: #0c1418; --sheet: #142027; --ink: #e6eef0; --muted: #98a9b0; --rule: #27363d;
+  --accent: #5fd0bd; --accent-soft: #143a35; --accent-ink: #06231d; --hero: #1b2c34; --hero-ink: #eaf3f2;
+  --ok: #6fd3a0; --ok-bg: #173327; --part: #f2c46a; --part-bg: #3a2c10; --new: #98a9b0; --new-bg: #22313a;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
 body { background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.55; }
-.wrap { max-width: 960px; margin: 0 auto; padding-inline: 20px; padding-block: 32px 64px; display: grid; gap: 40px; }
-h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; }
+.wrap { max-width: 1040px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
 p { margin: 0; }
 a { color: inherit; }
-a:focus-visible, button:focus-visible { outline: 3px solid var(--label); outline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.mono { font-family: var(--mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; }
 
-/* Label header */
-.tag { background: var(--label); color: var(--label-ink); border-radius: 6px; padding: 22px 24px; display: grid; grid-template-columns: 1fr auto; gap: 16px 28px; align-items: end; }
-.tag-meta { font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 6px 18px; grid-column: 1 / -1; }
-.tag h1 { font-size: clamp(2.2rem, 6vw, 3.9rem); font-weight: 800; font-stretch: 78%; line-height: .98; letter-spacing: -.01em; }
-.tag .sub { font-size: 1.05rem; max-width: 52ch; margin-top: 10px; font-weight: 500; }
-.bc { display: grid; gap: 4px; justify-items: center; min-width: 0; }
-.bc svg { width: 190px; max-width: 100%; height: 70px; display: block; }
-.chip.new { color: var(--muted); background: var(--paper); }
-.bc span { font-family: var(--mono); font-size: 12px; letter-spacing: .2em; }
+/* Report header */
+.hero { background: var(--hero); color: var(--hero-ink); border-radius: 10px; padding: 26px 28px 28px; display: grid; gap: 18px; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; justify-content: space-between; opacity: .85; }
+.bar .dots { display: flex; gap: 6px; }
+.bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); opacity: .9; }
+.bar .dots i + i { opacity: .55; } .bar .dots i + i + i { opacity: .3; }
+.hero h1 { font-size: clamp(2.3rem, 6.4vw, 4.4rem); font-weight: 800; font-stretch: 76%; line-height: .96; letter-spacing: -.012em; max-width: 14ch; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 24px 36px; align-items: end; }
+.hero .sub { font-size: 1.08rem; max-width: 50ch; margin-top: 14px; }
+.who { border-left: 3px solid var(--accent); padding-left: 16px; display: grid; gap: 4px; }
+.who b { font-family: var(--display); font-size: 1.5rem; font-stretch: 88%; }
+.who span { opacity: .85; font-size: 15px; }
 
-.who { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
-.who h2 { font-size: 1.6rem; font-weight: 700; font-stretch: 90%; }
-.who p { color: var(--muted); }
-.score { font-family: var(--mono); font-size: 14px; display: flex; gap: 10px; align-items: center; }
-.score b { font-family: var(--display); font-size: 1.6rem; font-stretch: 80%; color: var(--ok); }
+/* KPI tiles */
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 16px 16px 14px; display: grid; gap: 2px; align-content: start; }
+.kpi b { font-family: var(--display); font-size: clamp(2rem, 4.6vw, 2.9rem); font-weight: 800; font-stretch: 74%; line-height: 1; font-variant-numeric: tabular-nums; color: var(--accent); }
+.kpi span { font-size: 14px; color: var(--ink); font-weight: 500; }
+.kpi small { font-size: 12.5px; color: var(--muted); }
 
-/* Section heads */
-.sec { display: grid; gap: 14px; }
-.eyebrow { font-family: var(--mono); font-size: 12.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.sec > h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-weight: 750; font-stretch: 85%; }
+/* Panels */
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: 8px; padding: 20px; display: grid; gap: 16px; align-content: start; }
+.panel-head { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; justify-content: space-between; }
+.panel-head h2 { font-size: 1.35rem; font-weight: 750; font-stretch: 86%; }
+.panel-head .mono { color: var(--muted); }
+.two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 16px; }
 
-/* Match rows */
-.sheet { background: var(--sheet); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
-.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr) 104px; gap: 18px; padding: 18px 20px; border-top: 1px solid var(--rule); align-items: start; }
-.row:first-child { border-top: 0; }
-.row.head { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-block: 12px; }
+/* Coverage */
+.cov { display: grid; gap: 12px; }
+.cov-big { font-family: var(--display); font-weight: 800; font-stretch: 74%; font-size: 3.4rem; line-height: 1; }
+.cov-big small { font-size: 1.1rem; font-weight: 600; color: var(--muted); font-stretch: 100%; }
+.cells { display: grid; grid-template-columns: repeat(11, minmax(0, 1fr)); gap: 4px; }
+.cells i { height: 34px; border-radius: 3px; background: var(--ok); transform-origin: bottom; }
+.cells i.p { background: var(--part); } .cells i.n { background: var(--new-bg); border: 1px dashed var(--new); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); }
+.legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; background: var(--ok); }
+.legend .p::before { background: var(--part); } .legend .n::before { background: var(--new-bg); outline: 1px dashed var(--new); }
+
+/* Flow */
+.flow { display: grid; grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1.1fr) 22px minmax(0, 1fr); gap: 8px; align-items: stretch; }
+.col { display: grid; gap: 6px; align-content: start; }
+.col > .mono { color: var(--muted); margin-bottom: 2px; }
+.node { border: 1px solid var(--rule); border-radius: 5px; padding: 7px 10px; font-size: 14px; font-weight: 500; background: var(--paper); min-width: 0; }
+.node small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.node.mid { background: var(--accent-soft); border-color: var(--accent); }
+.node.out { border-left: 3px solid var(--accent); }
+.arrow { align-self: center; justify-self: center; color: var(--accent); font-family: var(--mono); font-size: 20px; }
+
+/* Requirement table */
+.row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 96px; gap: 16px; padding: 14px 0; border-top: 1px solid var(--rule); align-items: start; }
+.row.head { border-top: 0; padding: 0 0 4px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rows { display: grid; }
 .req { font-weight: 600; }
-.ev { color: var(--ink); }
-.ev small { display: block; color: var(--muted); font-size: 13.5px; margin-top: 4px; }
-.chip { font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .04em; padding: 4px 8px; border-radius: 4px; justify-self: start; white-space: nowrap; }
+.ev small { display: block; color: var(--muted); font-size: 13.5px; margin-top: 3px; }
+.chip { font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 4px 8px; border-radius: 4px; justify-self: start; white-space: nowrap; }
 .chip.ok { color: var(--ok); background: var(--ok-bg); }
 .chip.part { color: var(--part); background: var(--part-bg); }
+.chip.new { color: var(--new); background: var(--new-bg); }
+.group { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); padding: 18px 0 2px; border-top: 1px solid var(--rule); }
 
-/* Numbers */
-.nums { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
-.num { background: var(--sheet); padding: 18px; display: grid; gap: 4px; }
-.num b { font-family: var(--display); font-size: 2.3rem; font-weight: 800; font-stretch: 75%; line-height: 1; font-variant-numeric: tabular-nums; }
-.num span { color: var(--muted); font-size: 14px; }
+/* Gantt */
+.gantt { display: grid; gap: 8px; }
+.g-axis, .g-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 12px; align-items: center; }
+.g-axis .ticks { display: grid; grid-template-columns: repeat(6, 1fr); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.g-row .lab { font-size: 14px; font-weight: 500; }
+.g-row .lab small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.track { position: relative; height: 22px; background: repeating-linear-gradient(to right, var(--rule) 0 1px, transparent 1px calc(100% / 6)); border-radius: 3px; }
+.seg { position: absolute; top: 3px; bottom: 3px; border-radius: 3px; background: var(--muted); opacity: .55; }
+.seg.a { background: var(--accent); opacity: 1; }
+.seg.b { background: var(--accent); opacity: .7; } .seg.c { background: var(--accent); opacity: .45; }
+.g-note { font-size: 13px; color: var(--muted); }
 
-/* SAP timeline */
-.line { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.stop { border-top: 3px solid var(--ink); padding-top: 12px; display: grid; gap: 4px; min-width: 0; }
-.stop.now { border-top-color: var(--label); }
-.stop .yr { font-family: var(--mono); font-size: 13px; color: var(--muted); }
-.stop h3 { font-family: var(--display); font-stretch: 88%; font-size: 1.2rem; margin: 0; }
-.stop p { font-size: 15px; color: var(--muted); }
+/* Plan */
+.plan { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.stop { border-top: 3px solid var(--rule); padding-top: 10px; display: grid; gap: 4px; }
+.stop.now { border-top-color: var(--accent); }
+.stop h3 { font-size: 1.1rem; font-stretch: 88%; }
+.stop p { font-size: 14.5px; color: var(--muted); }
+.stop .mono { color: var(--muted); }
 
-/* Practical */
-.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; }
-.fact { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; padding-block: 10px; border-bottom: 1px solid var(--rule); }
-.fact dt { font-family: var(--mono); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; margin: 0; }
+.fact { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding-block: 9px; border-bottom: 1px solid var(--rule); }
+.fact dt { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
 .fact dd { margin: 0; }
 
-/* Contact */
-.contact { background: var(--ink); color: var(--paper); border-radius: 6px; padding: 26px 24px; display: grid; gap: 14px; }
-.contact h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); font-stretch: 85%; }
-.links { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
-.links a, .links button { font-family: var(--mono); font-size: 14px; color: var(--paper); border: 1px solid color-mix(in srgb, var(--paper) 40%, transparent); background: transparent; border-radius: 4px; padding: 8px 12px; text-decoration: none; cursor: pointer; }
-.links a:hover, .links button:hover { background: color-mix(in srgb, var(--paper) 12%, transparent); }
+.contact { background: var(--hero); color: var(--hero-ink); border-radius: 10px; padding: 26px 28px; display: grid; gap: 12px; }
+.contact h2 { font-size: clamp(1.6rem, 3.6vw, 2.2rem); font-stretch: 84%; }
+.links { display: flex; flex-wrap: wrap; gap: 10px 12px; }
+.links a, .links button { font-family: var(--mono); font-size: 14px; color: var(--hero-ink); border: 1px solid color-mix(in srgb, var(--hero-ink) 40%, transparent); background: transparent; border-radius: 4px; padding: 8px 12px; text-decoration: none; cursor: pointer; }
+.links a:hover, .links button:hover { background: color-mix(in srgb, var(--hero-ink) 14%, transparent); }
 .mail { font-family: var(--mono); user-select: all; }
 .foot { color: var(--muted); font-size: 13px; }
 
-@media (max-width: 720px) {
-  .tag { grid-template-columns: 1fr; }
-  .bc { justify-items: start; }
-  .row { grid-template-columns: 1fr; gap: 8px; }
-  .row.head { display: none; }
-  .nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .line, .facts { grid-template-columns: 1fr; }
-  .fact { grid-template-columns: 110px minmax(0, 1fr); }
+@media (max-width: 760px) {
+  .hero { padding: 22px 20px; } .hero-grid, .two { grid-template-columns: 1fr; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow { grid-template-columns: 1fr; } .arrow { transform: rotate(90deg); }
+  .row { grid-template-columns: 1fr; gap: 6px; } .row.head { display: none; }
+  .g-axis, .g-row { grid-template-columns: 96px minmax(0, 1fr); gap: 8px; }
+  .plan, .facts { grid-template-columns: 1fr; }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .chip.ok { transition: transform .2s; }
-  .row:hover .chip { transform: translateX(3px); }
+  .cells i { animation: grow .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * 45ms); }
+  .seg { animation: draw .7s cubic-bezier(.2,.8,.2,1) both; transform-origin: left; }
+  @keyframes grow { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
+  @keyframes draw { from { transform: scaleX(.05); } to { transform: scaleX(1); } }
 }
 </style>
 
 </head>
 <body>
 <main class="wrap">
-  <header class="tag">
-    <div class="tag-meta"><span>Match record</span><span>BI &amp; ERP Data Analyst</span><span>High Wycombe</span></div>
-    <div>
-      <h1>A new ERP full of data, and someone who loves both</h1>
-      <p class="sub">Your client has rolled out a new ERP and needs someone to own its data, reporting and BI. I did that job at a London manufacturer, and I'd like to do it again.</p>
+  <header class="hero">
+    <div class="bar"><span class="mono">Candidate report · BI &amp; ERP Data Analyst · High Wycombe</span><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
+    <div class="hero-grid">
+      <div>
+        <h1>I built you a <em>dashboard</em> about me.</h1>
+        <p class="sub">Your client needs someone to own ERP data, reporting and BI. So here is my experience, reported the way I would report theirs.</p>
+      </div>
+      <div class="who"><b>Sherin James</b><span>ERP data, Power BI, Tableau and SQL</span><span>MSc Artificial Intelligence, Distinction</span><span>Previously London, now Pune, ready to relocate</span></div>
     </div>
-    <div class="bc" aria-hidden="true"><svg id="bars" viewBox="0 0 190 70" preserveAspectRatio="none"></svg><span>ERP-BI-2026</span></div>
   </header>
 
-  <section class="who">
-    <div>
-      <h2>Sherin James</h2>
-      <p>ERP data, Power BI and SQL. MSc in AI. Previously London, now Pune, ready to relocate.</p>
-    </div>
-    <div class="score"><b>5 / 5</b> core requirements matched</div>
+  <section class="kpis" aria-label="Headline results">
+    <div class="kpi"><b data-n="5">5</b><span>business systems at one site</span><small>Point74 ERP, SAP, VQMS, TRACS, Element Suite</small></div>
+    <div class="kpi"><b data-n="700" data-s="+">700+</b><span>ERP records migrated and validated</span><small>with data quality rules and sign-off</small></div>
+    <div class="kpi"><b data-n="40" data-s="%">40%</b><span>faster audit preparation</span><small>from 4 Power BI dashboards</small></div>
+    <div class="kpi"><b data-n="2" data-s="×">2×</b><span>promoted in 13 months</span><small>Taiko Foods, London</small></div>
   </section>
 
-  <section class="sec">
-    <p class="eyebrow">About you</p>
-    <h2>Every core requirement, checked against real work</h2>
-    <div class="sheet">
-      <div class="row head"><span>Your brief</span><span>My evidence</span><span>Status</span></div>
-      <div class="row"><p class="req">Experience working with ERP data, reporting or business systems</p><p class="ev">Owned ERP data and reporting at Taiko Foods across Point74 ERP, SAP, VQMS and Element Suite.<small>Promoted twice in 13 months into Business Systems Support.</small></p><span class="chip ok">Matched</span></div>
-      <div class="row"><p class="req">SQL and Power BI, including DAX and data modelling</p><p class="ev">Advanced SQL, plus Power BI with DAX and Power Query.<small>Built SQL and Python pipelines linking three business systems.</small></p><span class="chip ok">Matched</span></div>
-      <div class="row"><p class="req">Building dashboards, reports and management information</p><p class="ev">Built 4 Power BI dashboards on supplier and workforce KPIs, presented monthly to senior leadership.<small>Cut audit preparation time by 40%.</small></p><span class="chip ok">Matched</span></div>
-      <div class="row"><p class="req">Identifying and resolving data quality or integrity issues</p><p class="ev">Kept supplier and product master data 100% accurate in a zero-error, audited environment.<small>Traced reporting issues to their root cause and fixed them with IT and vendors.</small></p><span class="chip ok">Matched</span></div>
-      <div class="row"><p class="req">Translating business requirements into useful reporting and insight</p><p class="ev">Worked with Quality, Operations, Procurement, Finance and People teams to turn questions into KPIs.<small>Comfortable with technical and non-technical stakeholders.</small></p><span class="chip ok">Matched</span></div>
+  <div class="two">
+    <section class="panel">
+      <div class="panel-head"><h2>Match coverage</h2><span class="mono">11 requirements</span></div>
+      <div class="cov">
+        <p class="cov-big">9 <small>of 11 matched outright</small></p>
+        <div class="cells" role="img" aria-label="9 matched, 1 partly matched, 1 new to me">
+          <i style="--i:0"></i><i style="--i:1"></i><i style="--i:2"></i><i style="--i:3"></i><i style="--i:4"></i><i style="--i:5"></i><i style="--i:6"></i><i style="--i:7"></i><i style="--i:8"></i><i class="p" style="--i:9"></i><i class="n" style="--i:10"></i>
+        </div>
+        <div class="legend"><span>Matched</span><span class="p">Partly</span><span class="n">New to me</span></div>
+        <p class="g-note">All 5 core requirements matched. The two gaps are named below, not hidden.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>From systems to insight</h2><span class="mono">Taiko Foods</span></div>
+      <div class="flow">
+        <div class="col"><span class="mono">Systems</span>
+          <div class="node">Point74 ERP</div><div class="node">SAP</div><div class="node">VQMS</div><div class="node">TRACS</div><div class="node">Element Suite</div>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="col"><span class="mono">What I did</span>
+          <div class="node mid">SQL and Python pipelines<small>automating manual reporting</small></div>
+          <div class="node mid">Data quality rules<small>100% accuracy on master data</small></div>
+          <div class="node mid">ERP data migration<small>mapping, validation, sign-off</small></div>
+        </div>
+        <span class="arrow" aria-hidden="true">→</span>
+        <div class="col"><span class="mono">What the business got</span>
+          <div class="node out">4 Power BI dashboards<small>supplier and workforce KPIs</small></div>
+          <div class="node out">Tableau supplier analysis<small>across the whole supplier base</small></div>
+          <div class="node out">Monthly KPI pack<small>presented to senior leadership</small></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head"><h2>Your brief, checked line by line</h2><span class="mono">Evidence, not adjectives</span></div>
+    <div class="rows">
+      <div class="row head"><span>You asked for</span><span>What I've done</span><span>Status</span></div>
+      <div class="row"><p class="req">Experience with ERP data, reporting or business systems</p><p class="ev">Worked across five business systems at Taiko Foods: Point74 ERP, SAP, VQMS, TRACS and Element Suite.<small>Promoted twice in 13 months into Business Systems Support.</small></p><span class="chip ok">Matched</span></div>
+      <div class="row"><p class="req">SQL and Power BI, including DAX and data modelling</p><p class="ev">Advanced SQL, Power BI with DAX and Power Query, and Tableau.<small>Built SQL and Python pipelines linking Point74, VQMS and Element Suite.</small></p><span class="chip ok">Matched</span></div>
+      <div class="row"><p class="req">Building dashboards, reports and management information</p><p class="ev">4 Power BI dashboards on supplier and workforce KPIs, presented monthly to senior leadership.<small>Plus a Tableau analysis of the full supplier base.</small></p><span class="chip ok">Matched</span></div>
+      <div class="row"><p class="req">Finding and fixing data quality or integrity issues</p><p class="ev">Kept supplier and product master data 100% accurate in a zero-error, audited environment.<small>Traced reporting issues to their root cause and fixed them with IT and vendors.</small></p><span class="chip ok">Matched</span></div>
+      <div class="row"><p class="req">Turning business requirements into useful reporting</p><p class="ev">Worked with Quality, Operations, Procurement, Finance and People teams to turn questions into KPIs.<small>Comfortable with technical and non-technical stakeholders.</small></p><span class="chip ok">Matched</span></div>
+      <p class="group">Desirable</p>
+      <div class="row"><p class="req">ERP migration, data mapping or reconciliation</p><p class="ev">Led an ERP data migration: profiling, mapping, data quality rules, and validating 700+ records.</p><span class="chip ok">Done it</span></div>
+      <div class="row"><p class="req">Python or Power Automate</p><p class="ev">Python for data pipelines and analysis.<small>Power Automate would be new, and close to what I already automate.</small></p><span class="chip ok">Done it</span></div>
+      <div class="row"><p class="req">An order-driven environment</p><p class="ev">Daily SAP at UPS for orders, contracts, warehouse tracking and shipments.<small>Plus food manufacturing, where every order has a deadline.</small></p><span class="chip ok">Done it</span></div>
+      <div class="row"><p class="req">AI, automation or data-led initiatives</p><p class="ev">MSc in Artificial Intelligence with Distinction, and automated reporting at Taiko.<small>AI only works on clean, well-governed data. That is the part I enjoy.</small></p><span class="chip ok">Done it</span></div>
+      <div class="row"><p class="req">Commercial analysis of customer buying patterns</p><p class="ev">Supplier performance analysis in Tableau, and trend and variance analysis for operations and finance.<small>Sales-side buying pattern analysis is where I would grow.</small></p><span class="chip part">Partly</span></div>
+      <div class="row"><p class="req">Acumatica or a similar ERP</p><p class="ev">Point74 ERP and SAP so far.<small>Acumatica would be new. I worked across five systems in 13 months at Taiko.</small></p><span class="chip new">New to me</span></div>
     </div>
   </section>
 
-  <section class="sec">
-    <p class="eyebrow">Desirable experience</p>
-    <h2>The extras, and where I stand on each</h2>
-    <div class="sheet">
-      <div class="row head"><span>The role</span><span>My experience</span><span>Status</span></div>
-      <div class="row"><p class="req">ERP migration projects, data mapping or reconciliation</p><p class="ev">Led an ERP data migration: profiling, data mapping, data quality rules, and validating 700+ records with sign-off.</p><span class="chip ok">Done it</span></div>
-      <div class="row"><p class="req">Python or Power Automate</p><p class="ev">Python for data pipelines and analysis.<small>Power Automate would be new, and it is close to what I already automate.</small></p><span class="chip ok">Done it</span></div>
-      <div class="row"><p class="req">An order-driven environment: wholesale, distribution, logistics</p><p class="ev">Daily SAP at UPS for orders, contracts, warehouse tracking and shipments.<small>Plus food manufacturing, where every order has a deadline.</small></p><span class="chip ok">Done it</span></div>
-      <div class="row"><p class="req">Supporting AI, automation or data-led initiatives</p><p class="ev">MSc in Artificial Intelligence with Distinction, and automation of manual reporting at Taiko.<small>I know AI only works on clean, well-governed data.</small></p><span class="chip ok">Done it</span></div>
-      <div class="row"><p class="req">Commercial analysis of customer buying patterns</p><p class="ev">Trend and variance analysis for operations and finance, and customer trend observations in retail.<small>Sales-focused buying pattern analysis is the part I would grow into.</small></p><span class="chip part">Partly</span></div>
-      <div class="row"><p class="req">Acumatica or a similar ERP platform</p><p class="ev">Point74 ERP and SAP so far.<small>Acumatica would be new. I picked up three business systems in my first year at Taiko.</small></p><span class="chip new">New to me</span></div>
+  <section class="panel">
+    <div class="panel-head"><h2>Where the experience came from</h2><span class="mono">2020 to 2025</span></div>
+    <div class="gantt">
+      <div class="g-axis"><span></span><div class="ticks"><span>2020</span><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span></div></div>
+      <div class="g-row"><div class="lab">Taiko Foods<small>three roles, two promotions</small></div><div class="track"><i class="seg c" data-a="2024-06" data-b="2024-10"></i><i class="seg b" data-a="2024-10" data-b="2025-01"></i><i class="seg a" data-a="2025-01" data-b="2025-07"></i></div></div>
+      <div class="g-row"><div class="lab">MSc AI, London<small>Distinction</small></div><div class="track"><i class="seg a" data-a="2022-09" data-b="2023-09"></i></div></div>
+      <div class="g-row"><div class="lab">Marks &amp; Spencer<small>alongside the MSc</small></div><div class="track"><i class="seg" data-a="2022-10" data-b="2024-05"></i></div></div>
+      <div class="g-row"><div class="lab">UPS<small>SAP, FP&amp;A</small></div><div class="track"><i class="seg a" data-a="2022-04" data-b="2022-08"></i></div></div>
+      <div class="g-row"><div class="lab">Hotel Kerala Cafe<small>accounts and payroll</small></div><div class="track"><i class="seg" data-a="2020-01" data-b="2022-08"></i></div></div>
+      <p class="g-note">Since mid 2025: a planned career break, SAP S/4HANA training, an AI side project, and volunteering.</p>
     </div>
   </section>
 
-  <section class="sec">
-    <p class="eyebrow">Results at Taiko Foods</p>
-    <div class="nums">
-      <div class="num"><b>4</b><span>Power BI dashboards used by senior leadership</span></div>
-      <div class="num"><b>700+</b><span>ERP records validated in a data migration</span></div>
-      <div class="num"><b>40%</b><span>faster audit preparation</span></div>
-      <div class="num"><b>2+ hrs</b><span>of manual reporting saved every day</span></div>
+  <section class="panel">
+    <div class="panel-head"><h2>How I'd start</h2><span class="mono">First 90 days</span></div>
+    <div class="plan">
+      <div class="stop"><span class="mono">Days 1 to 30</span><h3>Learn the data and the people</h3><p>Understand the new ERP, what each team needs from it, and where the numbers are not trusted yet.</p></div>
+      <div class="stop"><span class="mono">By day 60</span><h3>Fix the foundations</h3><p>Agree reporting definitions, tackle the worst data quality issues, and set up exception reports.</p></div>
+      <div class="stop now"><span class="mono">By day 90</span><h3>Deliver insight</h3><p>Power BI dashboards the business uses, and a first look at customer buying patterns for Sales.</p></div>
     </div>
   </section>
 
-  <section class="sec">
-    <p class="eyebrow">How I'd start</p>
-    <div class="line">
-      <div class="stop"><span class="yr">First 30 days</span><h3>Learn the data and the people</h3><p>Understand the new ERP, what each team needs from it, and where the numbers are not trusted.</p></div>
-      <div class="stop"><span class="yr">By day 60</span><h3>Fix the foundations</h3><p>Agree reporting definitions, tackle the worst data quality issues, and set up exception reports.</p></div>
-      <div class="stop now"><span class="yr">By day 90</span><h3>Deliver insight</h3><p>Power BI dashboards the business uses, and a first look at customer buying patterns for Sales.</p></div>
-    </div>
-  </section>
-
-  <section class="sec">
-    <p class="eyebrow">The practical bits</p>
+  <section class="panel">
+    <div class="panel-head"><h2>The practical bits</h2></div>
     <dl class="facts">
       <div class="fact"><dt>Location</dt><dd>Pune, India. Lived and worked in London 2022 to 2025.</dd></div>
       <div class="fact"><dt>Visa</dt><dd>Would need Skilled Worker sponsorship.</dd></div>
@@ -200,7 +272,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--label); outline
   </section>
 
   <section class="contact">
-    <h2>Let's talk about the role</h2>
+    <h2>Want the person behind the report?</h2>
     <p>Email <span class="mail">sherinalice28@gmail.com</span></p>
     <div class="links">
       <button type="button" id="copy">Copy email</button>
@@ -213,29 +285,36 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--label); outline
 
 <script>
 (function () {
-  var svg = document.getElementById('bars');
-  var ns = 'http://www.w3.org/2000/svg';
-  var h = [18, 26, 22, 34, 30, 42, 38, 50, 46, 58, 54, 66];
-  for (var i = 0; i < h.length; i++) {
-    var r = document.createElementNS(ns, 'rect');
-    r.setAttribute('x', 4 + i * 15.4); r.setAttribute('y', 70 - h[i]);
-    r.setAttribute('width', 10); r.setAttribute('height', h[i]);
-    r.setAttribute('fill', 'currentColor');
-    svg.appendChild(r);
+  var start = Date.UTC(2020, 0, 1), end = Date.UTC(2026, 0, 1), span = end - start;
+  function t(s) { var p = s.split('-'); return Date.UTC(+p[0], +p[1] - 1, 1); }
+  document.querySelectorAll('.seg').forEach(function (el) {
+    var a = (t(el.dataset.a) - start) / span * 100, b = (t(el.dataset.b) - start) / span * 100;
+    el.style.left = a + '%'; el.style.width = Math.max(b - a, 1.2) + '%';
+  });
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!calm) {
+    document.querySelectorAll('.kpi b').forEach(function (el) {
+      var n = +el.dataset.n, s = el.dataset.s || '', t0 = null;
+      function step(ts) {
+        if (!t0) t0 = ts;
+        var k = Math.min((ts - t0) / 900, 1), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = Math.round(n * e) + s;
+        if (k < 1) requestAnimationFrame(step); else el.textContent = n + s;
+      }
+      requestAnimationFrame(step);
+    });
   }
   var btn = document.getElementById('copy');
   btn.addEventListener('click', function () {
-    var t = 'sherinalice28@gmail.com';
+    var m = 'sherinalice28@gmail.com';
     var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy email'; }, 1600); };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(t).then(done, function () { select(); });
-    } else { select(); }
     function select() {
       var el = document.querySelector('.mail');
       var rg = document.createRange(); rg.selectNodeContents(el);
       var s = window.getSelection(); s.removeAllRanges(); s.addRange(rg);
       btn.textContent = 'Press Ctrl+C';
     }
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(m).then(done, select); } else { select(); }
   });
 })();
 </script>
